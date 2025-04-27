@@ -31,11 +31,13 @@ The server will start at http://127.0.0.1:8000.
 4. Open the Frontend
 Open index.html in your browser. Paste your text into the input box and click Analyze to see the results.
 
-**** Model Training*****
+*** Model Training***
 The model was fine-tuned on a custom dataset using the Hugging Face Trainer API. Key steps include:
 
 Data Preprocessing: Tokenization and truncation to 512 tokens.
+
 Fine-Tuning: Using a pre-trained BERT model (bert-tiny) for binary classification.
+
 Evaluation: Metrics include accuracy, precision, recall, and F1 score.
 ****Evaluation Results****
 Metric	Value
