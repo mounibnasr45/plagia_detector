@@ -38,4 +38,6 @@ async def predict_text(req: TextRequest):
     return {"prediction": label, "confidence": round(confidence, 3)}
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=8000)
+    import uvicorn
+    uvicorn.run("backend_plagia:app", host="0.0.0.0", port=8000)
+
