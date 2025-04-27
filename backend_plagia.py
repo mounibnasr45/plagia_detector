@@ -3,27 +3,22 @@ from pydantic import BaseModel
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import torch
 import uvicorn
-
-class TextRequest(BaseModel):
-    text: str
-
-app = FastAPI()
 from fastapi.middleware.cors import CORSMiddleware
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # Replace "*" with specific origins if needed
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 
 app = FastAPI()
 
-# Serve static files (like CSS/JS)
+# Allow CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Serve static files
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 @app.get("/", response_class=HTMLResponse)
@@ -31,11 +26,14 @@ async def read_index():
     with open("index.html", "r", encoding="utf-8") as file:
         return file.read()
 
-# Load the model and tokenizer
-# Load the model and tokenizer
-model_path = "plagia_model"  # Ensure this path contains all necessary files
+# Load model and tokenizer
+model_path = "plagia_model"  # Make sure it exists
 tokenizer = AutoTokenizer.from_pretrained(model_path)
 model = AutoModelForSequenceClassification.from_pretrained(model_path)
+
+class TextRequest(BaseModel):
+    text: str
+
 @app.post("/predict")
 async def predict_text(req: TextRequest):
     max_length = 512
@@ -52,6 +50,4 @@ async def predict_text(req: TextRequest):
     return {"prediction": label, "confidence": round(confidence, 3)}
 
 if __name__ == "__main__":
-    import uvicorn
     uvicorn.run("backend_plagia:app", host="0.0.0.0", port=8000)
-
