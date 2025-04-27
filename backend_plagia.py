@@ -17,6 +17,20 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+from fastapi import FastAPI
+from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
+
+app = FastAPI()
+
+# Serve static files (like CSS/JS)
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+@app.get("/", response_class=HTMLResponse)
+async def read_index():
+    with open("index.html", "r", encoding="utf-8") as file:
+        return file.read()
+
 # Load the model and tokenizer
 # Load the model and tokenizer
 model_path = "plagia_model"  # Ensure this path contains all necessary files
